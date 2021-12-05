@@ -3,6 +3,10 @@ package com.classic.algorithms;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+/**
+ * inspired from  from https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
+ *
+ */
 class Node {
 
 	int data;
