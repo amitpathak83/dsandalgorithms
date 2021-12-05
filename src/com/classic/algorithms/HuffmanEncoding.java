@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 class Node {
 
 	int data;
-	char c;
+	String c;
 
 	Node left;
 	Node right;
@@ -23,7 +23,7 @@ public class HuffmanEncoding {
 
 	public static void printHuffManTree(Node root, String s) {
 
-		if (root.left == null && root.right == null && Character.isLetter(root.c)) {
+		if (root.left == null && root.right == null && !root.c.equals("-")) {
 
 			System.out.println(root.c + "->" + s);
 
@@ -38,7 +38,7 @@ public class HuffmanEncoding {
 	public static void main(String[] args) {
 
 		int n = 6;
-		char[] chars = { 'a', 'b', 'c', 'd', 'e', 'f' };
+		String[] chars = { "a", "b", "c", "d", "e", "f" };
 		int[] freqs = { 4, 4, 12, 13, 16, 44 };
 
 		PriorityQueue<Node> q = new PriorityQueue<Node>(n, new TreeComparator());
@@ -59,7 +59,7 @@ public class HuffmanEncoding {
 			Node y = q.poll();
 			Node f = new Node();
 			f.data = x.data + y.data;
-			f.c = '-';
+			f.c = "-";
 			f.left = x;
 			f.right = y;
 			root = f;
