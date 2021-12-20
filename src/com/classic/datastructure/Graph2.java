@@ -121,6 +121,12 @@ public class Graph2 {
 
 	class Subset {
 		int parent, rank;
+
+		@Override
+		public String toString() {
+			return "Subset [parent=" + parent + ", rank=" + rank + "]";
+		}
+		
 	}
 
 	int find(Subset subsets[], int i) {
