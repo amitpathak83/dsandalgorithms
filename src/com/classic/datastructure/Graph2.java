@@ -5,14 +5,12 @@ package com.classic.datastructure;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.TreeSet;
+import java.util.PriorityQueue;
 
 /**
- * @author amitp
- * with help form
- * https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/
+ * @author amitp with help form
+ *         https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/
  *
  */
 public class Graph2 {
@@ -73,7 +71,86 @@ public class Graph2 {
 		graph2.addEdge(3, 9, 2);
 		graph2.addEdge(3, 6, 4);
 		graph2.addEdge(4, 6, 14);
-		System.out.println(graph2.kruskal());
+		// System.out.println(graph2.kruskal());
+		System.out.println(graph2.prims());
+
+	}
+
+	public List<Vertex> prims() {
+		List<Vertex> edgesMST = new ArrayList<>();
+		// create a queue of vertices
+		PriorityQueue<Vertex> vertices = new PriorityQueue<Graph2.Vertex>();
+		Vertex[] verticesarr = new Vertex[this.rootVetices.length];
+		// add all vertices to queue
+		for (int i = 1; i < this.rootVetices.length; i++) {
+			Vertex v = new Vertex();
+			v.vertex = i;
+			if (i == 1) {
+				v.parent = -1;
+				v.key = 0;
+			}
+			vertices.add(v);
+			verticesarr[i] = v;
+		}
+		while (!vertices.isEmpty()) {
+			Vertex v = vertices.poll();
+			edgesMST.add(v);
+			List<Edge> adj = this.rootVetices[v.vertex];
+			for (Edge e : adj) {
+				Vertex v2 = new Vertex();
+				v2.vertex = e.toVertex;
+				if (vertices.contains(v2) && e.weight < verticesarr[v2.vertex].key) {
+					v2.parent = v.vertex;
+					v2.key = e.weight;
+					verticesarr[v2.vertex] = v2;
+					vertices.remove(v2);
+					vertices.add(v2);
+				}
+			}
+		}
+
+		return edgesMST;
+	}
+
+	private static class Vertex implements Comparable<Vertex> {
+		int vertex;
+		/**
+		 * max value means not yet discovered -1 is for root
+		 */
+		int parent = Integer.MAX_VALUE;
+		int key = Integer.MAX_VALUE;
+
+		@Override
+		public int compareTo(Vertex o) {
+			return Integer.compare(key, o.key);
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + vertex;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Vertex other = (Vertex) obj;
+			if (vertex != other.vertex)
+				return false;
+			return true;
+		}
+
+		@Override
+		public String toString() {
+			return "Vertex [vertex=" + vertex + ", parent=" + parent + ", key=" + key + "]\n";
+		}
 
 	}
 
@@ -111,7 +188,7 @@ public class Graph2 {
 			int y = find(subsets, edge.toVertex);
 			if (x != y) {
 				edgesMST.add(edge);
-				 Union(subsets, x, y);
+				Union(subsets, x, y);
 
 			}
 		}
@@ -126,7 +203,7 @@ public class Graph2 {
 		public String toString() {
 			return "Subset [parent=" + parent + ", rank=" + rank + "]";
 		}
-		
+
 	}
 
 	int find(Subset subsets[], int i) {
