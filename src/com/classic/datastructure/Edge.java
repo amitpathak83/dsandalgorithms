@@ -12,6 +12,7 @@ public class Edge implements Comparable<Edge>{
 	public int weight;
 	public int toVertex;
 	boolean isDirecetd;
+	public boolean isProcessedInF = false;
 	// for flow only
 	public int capacity; /* capacity of edge */
 	public int residual; /* residual capacity of edge */

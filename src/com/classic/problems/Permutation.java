@@ -7,7 +7,7 @@ package com.classic.problems;
  * @author amitp
  *
  */
-public class Permutaion {
+public class Permutation {
 
 	/**
 	 * @param args

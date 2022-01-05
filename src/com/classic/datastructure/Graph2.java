@@ -3,10 +3,15 @@
  */
 package com.classic.datastructure;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  * @author amitp with help form
@@ -72,7 +77,35 @@ public class Graph2 {
 		graph2.addEdge(3, 6, 4);
 		graph2.addEdge(4, 6, 14);
 		// System.out.println(graph2.kruskal());
-		System.out.println(graph2.prims());
+		//System.out.println(graph2.prims());
+
+		Graph2 graph3 = new Graph2(5, true);
+		graph3.isdirected = true;
+		graph3.addEdge(1, 2, 6);
+		graph3.addEdge(1, 5, 7);
+		graph3.addEdge(2, 3, 5);
+		graph3.addEdge(2, 4, -4);
+		graph3.addEdge(2, 5, 8);
+		graph3.addEdge(3, 2, -2);
+		graph3.addEdge(4, 3, 7);
+		graph3.addEdge(4, 1, 2);
+		graph3.addEdge(5, 4, 9);
+		graph3.addEdge(5, 3, -3);
+		//System.out.println(Arrays.toString(graph3.bellmanFord()));
+
+		Graph2 graph4 = new Graph2(5, true);
+		graph4.isdirected = true;
+		graph4.addEdge(1, 2, 10);
+		graph4.addEdge(1, 5, 5);
+		graph4.addEdge(2, 3, 1);
+		graph4.addEdge(2, 5, 2);
+		graph4.addEdge(3, 4, 4);
+		graph4.addEdge(4, 1, 7);
+		graph4.addEdge(4, 3, 6);
+		graph4.addEdge(5, 2, 3);
+		graph4.addEdge(5, 3, 9);
+		graph4.addEdge(5, 4, 2);
+		System.out.println(graph4.dijkstra().toString());
 
 	}
 
@@ -105,6 +138,76 @@ public class Graph2 {
 					verticesarr[v2.vertex] = v2;
 					vertices.remove(v2);
 					vertices.add(v2);
+				}
+			}
+		}
+
+		return edgesMST;
+	}
+
+	public Vertex[] bellmanFord() {
+		Vertex[] verticesarr = new Vertex[this.rootVetices.length];
+		// add all vertices to queue
+		for (int i = 1; i < this.rootVetices.length; i++) {
+			Vertex v = new Vertex();
+			v.vertex = i;
+			if (i == 1) {
+				v.parent = -1;
+				v.key = 0;
+			}
+			verticesarr[i] = v;
+		}
+		Deque<Vertex> vertices = new ArrayDeque<Graph2.Vertex>();
+		vertices.add(verticesarr[1]);
+		while (!vertices.isEmpty()) {
+			Vertex v = vertices.poll();
+			List<Edge> edges = this.rootVetices[v.vertex];
+			for (Edge edge : edges) {
+				if (!edge.isProcessedInF) {
+					vertices.add(verticesarr[edge.toVertex]);
+					edge.isProcessedInF = true;
+					int weight = edge.weight;
+					if (verticesarr[edge.toVertex].key > verticesarr[edge.fromVertex].key + weight) {
+						verticesarr[edge.toVertex].key = verticesarr[edge.fromVertex].key + weight;
+						verticesarr[edge.toVertex].parent = v.vertex;
+					}
+				}
+			}
+		}
+
+		return verticesarr;
+	}
+
+	public Set<Vertex> dijkstra() {
+		Vertex[] verticesarr = new Vertex[this.rootVetices.length];
+		Set<Vertex> edgesMST = new HashSet<>();
+		// create a queue of vertices
+		PriorityQueue<Vertex> vertices = new PriorityQueue<Graph2.Vertex>();
+		// add all vertices to queue
+		for (int i = 1; i < this.rootVetices.length; i++) {
+			Vertex v = new Vertex();
+			v.vertex = i;
+			if (i == 1) {
+				v.parent = -1;
+				v.key = 0;
+			}
+			verticesarr[i] = v;
+
+		}
+		vertices.add(verticesarr[1]);
+		while (!vertices.isEmpty()) {
+			Vertex v = vertices.poll();
+			edgesMST.add(v);
+			List<Edge> edges = this.rootVetices[v.vertex];
+			for (Edge edge : edges) {
+				if (!edgesMST.contains(verticesarr[edge.toVertex])) {
+					edge.isProcessedInF = true;
+					int weight = edge.weight;
+					if (verticesarr[edge.toVertex].key > verticesarr[edge.fromVertex].key + weight) {
+						verticesarr[edge.toVertex].key = verticesarr[edge.fromVertex].key + weight;
+						verticesarr[edge.toVertex].parent = v.vertex;
+					}
+					vertices.add(verticesarr[edge.toVertex]);
 				}
 			}
 		}
